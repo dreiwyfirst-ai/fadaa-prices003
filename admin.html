@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>لوحة التحكم - تعديل الأسعار</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Tahoma, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      text-align: center;
+      margin: 0 0 10px;
+      color: #222;
+      font-size: 26px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #777;
+      margin-bottom: 25px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:focus {
+      border-color: #222;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .login-btn,
+    .save-btn {
+      background: #222;
+      color: white;
+    }
+
+    .login-btn:hover,
+    .save-btn:hover {
+      background: #000;
+    }
+
+    .logout-btn {
+      background: #eee;
+      color: #333;
+      margin-top: 10px;
+    }
+
+    .logout-btn:hover {
+      background: #ddd;
+    }
+
+    .message {
+      display: none;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .success {
+      display: block;
+      background: #e8f7ee;
+      color: #187a43;
+    }
+
+    .error {
+      display: block;
+      background: #fdecec;
+      color: #b42318;
+    }
+
+    #adminPanel {
+      display: none;
+    }
+
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .price-input {
+      direction: ltr;
+      text-align: right;
+    }
+
+    .header-icon {
+      text-align: center;
+      font-size: 45px;
+      margin-bottom: 10px;
+    }
+
+    .note {
+      background: #f8f8f8;
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 18px;
+      font-size: 12px;
+      color: #777;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- شاشة تسجيل الدخول -->
+  <div class="card" id="loginPanel">
+
+    <div class="header-icon">🔐</div>
+
+    <h1>لوحة التحكم</h1>
+
+    <div class="subtitle">
+      تسجيل الدخول لتعديل أسعار المنتجات
+    </div>
+
+    <div class="form-group">
+      <label for="password">كلمة المرور</label>
+
+      <input
+        type="password"
+        id="password"
+        placeholder="أدخل كلمة المرور"
+        autocomplete="current-password"
+      >
+    </div>
+
+    <button class="login-btn" onclick="login()">
+      دخول
+    </button>
+
+    <div id="loginMessage" class="message"></div>
+
+  </div>
+
+
+  <!-- لوحة تعديل الأسعار -->
+  <div class="card" id="adminPanel">
+
+    <div class="header-icon">💰</div>
+
+    <h1>تعديل سعر المنتج</h1>
+
+    <div class="subtitle">
+      أدخل بيانات المنتج والسعر الجديد
+    </div>
+
+
+    <div class="form-group">
+
+      <label for="groupName">
+        اسم المجموعة / الورقة
+      </label>
+
+      <input
+        type="text"
+        id="groupName"
+        placeholder="مثال: ثلاجات"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label for="productName">
+        اسم الصنف
+      </label>
+
+      <input
+        type="text"
+        id="productName"
+        placeholder="اكتب اسم المنتج بالضبط"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label for="newPrice">
+        السعر الجديد
+      </label>
+
+      <input
+        type="number"
+        id="newPrice"
+        class="price-input"
+        placeholder="0.00"
+        step="0.01"
+        min="0"
+      >
+
+    </div>
+
+
+    <button
+      class="save-btn"
+      id="saveButton"
+      onclick="updatePrice()"
+    >
+      حفظ وإرسال
+    </button>
+
+
+    <div id="updateMessage" class="message"></div>
+
+
+    <div class="note">
+      ⚠️ تأكد من كتابة اسم المجموعة واسم الصنف بنفس الشكل
+      الموجود في Google Sheets قبل تنفيذ التعديل.
+    </div>
+
+
+    <button
+      class="logout-btn"
+      onclick="logout()"
+    >
+      تسجيل الخروج
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  /*
+   * ==========================================
+   * إعدادات النظام
+   * ==========================================
+   */
+
+  const API_URL =
+    "https://script.google.com/macros/s/AKfycbxBIn3qdWSqv5I0amJ-WHYJR8aeFMsEbpPJe42ox4xhevtCeHp46XC0inujKw8ayJb/exec";
+
+
+  /*
+   * كلمة المرور
+   *
+   * غيّرها إلى كلمة المرور التي تريدها.
+   *
+   * ملاحظة:
+   * هذه الطريقة ليست حماية حقيقية لأن كلمة المرور
+   * موجودة داخل كود الصفحة.
+   */
+
+  const ADMIN_PASSWORD = "123456";
+
+
+  /*
+   * ==========================================
+   * تسجيل الدخول
+   * ==========================================
+   */
+
+  function login() {
+
+    const password =
+      document.getElementById("password").value.trim();
+
+    const message =
+      document.getElementById("loginMessage");
+
+
+    if (!password) {
+
+      showMessage(
+        message,
+        "يرجى إدخال كلمة المرور.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (password === ADMIN_PASSWORD) {
+
+      document.getElementById("loginPanel").style.display = "none";
+
+      document.getElementById("adminPanel").style.display = "block";
+
+      document.getElementById("password").value = "";
+
+    } else {
+
+      showMessage(
+        message,
+        "كلمة المرور غير صحيحة.",
+        "error"
+      );
+
+    }
+
+  }
+
+
+  /*
+   * ==========================================
+   * تحديث السعر
+   * ==========================================
+   */
+
+  async function updatePrice() {
+
+    const groupName =
+      document.getElementById("groupName").value.trim();
+
+    const productName =
+      document.getElementById("productName").value.trim();
+
+    const newPrice =
+      document.getElementById("newPrice").value.trim();
+
+    const message =
+      document.getElementById("updateMessage");
+
+    const button =
+      document.getElementById("saveButton");
+
+
+    /*
+     * التحقق من البيانات
+     */
+
+    if (!groupName) {
+
+      showMessage(
+        message,
+        "يرجى إدخال اسم المجموعة / الورقة.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (!productName) {
+
+      showMessage(
+        message,
+        "يرجى إدخال اسم الصنف.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (!newPrice || Number(newPrice) < 0) {
+
+      showMessage(
+        message,
+        "يرجى إدخال سعر صحيح.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /*
+     * تعطيل الزر أثناء الإرسال
+     */
+
+    button.disabled = true;
+    button.textContent = "جاري الحفظ...";
+
+
+    /*
+     * البيانات التي سيتم إرسالها
+     */
+
+    const data = {
+
+      groupName: groupName,
+
+      productName: productName,
+
+      newPrice: Number(newPrice)
+
+    };
+
+
+    try {
+
+      /*
+       * إرسال البيانات إلى Google Apps Script
+       */
+
+      const response = await fetch(API_URL, {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+
+        body: JSON.stringify(data)
+
+      });
+
+
+      const result = await response.json();
+
+
+      /*
+       * التحقق من نتيجة العملية
+       */
+
+      if (result.success) {
+
+        showMessage(
+          message,
+          result.message || "تم تحديث السعر بنجاح ✅",
+          "success"
+        );
+
+
+        /*
+         * تنظيف الحقول بعد النجاح
+         */
+
+        document.getElementById("productName").value = "";
+
+        document.getElementById("newPrice").value = "";
+
+      } else {
+
+        showMessage(
+          message,
+          result.message || "فشل تحديث السعر.",
+          "error"
+        );
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+      showMessage(
+        message,
+        "حدث خطأ أثناء الاتصال بالخادم. تأكد من رابط Apps Script وإعداداته.",
+        "error"
+      );
+
+    }
+
+
+    /*
+     * إعادة الزر إلى وضعه الطبيعي
+     */
+
+    button.disabled = false;
+
+    button.textContent = "حفظ وإرسال";
+
+  }
+
+
+  /*
+   * ==========================================
+   * تسجيل الخروج
+   * ==========================================
+   */
+
+  function logout() {
+
+    document.getElementById("adminPanel").style.display = "none";
+
+    document.getElementById("loginPanel").style.display = "block";
+
+    document.getElementById("password").value = "";
+
+    document.getElementById("groupName").value = "";
+
+    document.getElementById("productName").value = "";
+
+    document.getElementById("newPrice").value = "";
+
+    document.getElementById("updateMessage").style.display = "none";
+
+  }
+
+
+  /*
+   * ==========================================
+   * عرض الرسائل
+   * ==========================================
+   */
+
+  function showMessage(element, text, type) {
+
+    element.textContent = text;
+
+    element.className = "message " + type;
+
+  }
+
+
+  /*
+   * ==========================================
+   * الضغط على Enter في شاشة الدخول
+   * ==========================================
+   */
+
+  document
+    .getElementById("password")
+    .addEventListener("keydown", function(event) {
+
+      if (event.key === "Enter") {
+
+        login();
+
+      }
+
+    });
+
+
+</script>
+
+</body>
+</html>
