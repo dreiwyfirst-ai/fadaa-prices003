@@ -8,6 +8,7 @@
     <title>إدارة أسعار المنتجات</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -26,10 +27,15 @@
         }
 
         .card {
-            background: white;
+            background: #fff;
             border-radius: 18px;
             padding: 25px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 30px rgba(0,0,0,.08);
+        }
+
+        #loginPage {
+            max-width: 500px;
+            margin: 100px auto;
         }
 
         .header {
@@ -37,20 +43,16 @@
             margin-bottom: 25px;
         }
 
-        .header-icon {
+        .icon {
             font-size: 45px;
         }
 
-        .header h1 {
-            margin: 5px 0;
+        h1 {
+            margin: 8px 0;
         }
 
-        .header p {
+        .subtitle {
             color: #777;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
         }
 
         label {
@@ -67,6 +69,7 @@
             border-radius: 10px;
             font-size: 16px;
             outline: none;
+            background: white;
         }
 
         input:focus,
@@ -77,7 +80,7 @@
         button {
             border: none;
             border-radius: 10px;
-            padding: 12px 18px;
+            padding: 11px 16px;
             cursor: pointer;
             font-size: 15px;
             font-weight: bold;
@@ -87,19 +90,16 @@
             width: 100%;
             background: #222;
             color: white;
+            margin-top: 5px;
         }
 
-        .login-button:hover {
-            background: #000;
+        .login-button:disabled {
+            opacity: .6;
+            cursor: wait;
         }
 
         #dashboard {
             display: none;
-        }
-
-        #loginPage {
-            max-width: 500px;
-            margin: 100px auto;
         }
 
         .controls {
@@ -140,33 +140,32 @@
         .price-button {
             width: 100%;
             background: #f1f1f1;
-            color: #222;
             border: 1px solid #ddd;
-            font-size: 16px;
+            color: #222;
         }
 
         .price-button:hover {
             background: #e5e5e5;
         }
 
-        .price-edit {
+        .edit-box {
             display: flex;
             gap: 5px;
         }
 
-        .price-edit input {
+        .edit-box input {
+            min-width: 0;
             text-align: center;
             direction: ltr;
             padding: 9px;
-            min-width: 0;
         }
 
-        .save-small {
+        .save-button {
             background: #222;
             color: white;
         }
 
-        .cancel-small {
+        .cancel-button {
             background: #eee;
             color: #333;
         }
@@ -198,16 +197,15 @@
             color: #777;
         }
 
-        .logout {
-            margin-top: 20px;
-            background: #eee;
-            color: #333;
-        }
-
         .count {
             color: #777;
             font-size: 13px;
-            margin: 10px 0;
+            margin-bottom: 10px;
+        }
+
+        .logout {
+            margin-top: 20px;
+            background: #eee;
         }
 
         @media (max-width: 650px) {
@@ -237,62 +235,54 @@
                 font-size: 13px;
             }
 
-            .price-edit {
+            .edit-box {
                 flex-direction: column;
             }
 
-            .price-edit button {
-                width: 100%;
-            }
         }
+
     </style>
+
 </head>
+
 
 <body>
 
 
 <!-- =========================
-     تسجيل الدخول
+     LOGIN
 ========================= -->
 
 <div id="loginPage" class="card">
 
     <div class="header">
 
-        <div class="header-icon">
-            🔐
-        </div>
+        <div class="icon">🔐</div>
 
         <h1>
             إدارة أسعار المنتجات
         </h1>
 
-        <p>
+        <div class="subtitle">
             تسجيل الدخول
-        </p>
+        </div>
 
     </div>
 
 
-    <div class="form-group">
+    <label for="password">
+        كلمة المرور
+    </label>
 
-        <label for="password">
-            كلمة المرور
-        </label>
-
-        <input
-            type="password"
-            id="password"
-            placeholder="أدخل كلمة المرور"
-            autocomplete="current-password"
-        >
-
-    </div>
-
+    <input
+        id="password"
+        type="password"
+        placeholder="أدخل كلمة المرور"
+    >
 
     <button
-        class="login-button"
         id="loginButton"
+        class="login-button"
         onclick="login()"
     >
         دخول
@@ -309,7 +299,7 @@
 
 
 <!-- =========================
-     لوحة التحكم
+     DASHBOARD
 ========================= -->
 
 <div
@@ -319,32 +309,26 @@
 
     <div class="card">
 
-
         <div class="header">
 
-            <div class="header-icon">
-                💰
-            </div>
+            <div class="icon">💰</div>
 
             <h1>
                 إدارة أسعار المنتجات
             </h1>
 
-            <p>
+            <div class="subtitle">
                 اضغط على السعر لتعديله
-            </p>
+            </div>
 
         </div>
 
 
-        <!-- اختيار المجموعة والبحث -->
-
         <div class="controls">
-
 
             <div>
 
-                <label for="sheetSelect">
+                <label>
                     المجموعة
                 </label>
 
@@ -364,19 +348,18 @@
 
             <div>
 
-                <label for="searchInput">
+                <label>
                     البحث عن صنف
                 </label>
 
                 <input
-                    type="text"
                     id="searchInput"
+                    type="text"
                     placeholder="اكتب اسم الصنف..."
                     oninput="filterItems()"
                 >
 
             </div>
-
 
         </div>
 
@@ -393,10 +376,7 @@
         ></div>
 
 
-        <!-- جدول المنتجات -->
-
         <div class="table">
-
 
             <div class="table-header">
 
@@ -419,7 +399,6 @@
 
             </div>
 
-
         </div>
 
 
@@ -430,7 +409,6 @@
             تسجيل الخروج
         </button>
 
-
     </div>
 
 </div>
@@ -440,37 +418,33 @@
 <script>
 
 
-/*
-================================================
-رابط Google Apps Script الجديد
-================================================
-*/
+/* ==================================================
+   رابط Google Apps Script الجديد
+================================================== */
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbxtON2C_v_0n46rffVnWpmAxn1i4vhFbuy8vIUMqvJPeLqhiaeO1WGPG3yfi6dZJb7U/exec";
 
 
-/*
-================================================
-المتغيرات
-================================================
-*/
+/* ==================================================
+   كلمة المرور
+================================================== */
 
 let password = "";
 
 let allItems = [];
 
 
-/*
-================================================
-تسجيل الدخول
-================================================
-*/
+/* ==================================================
+   تسجيل الدخول
+================================================== */
 
 async function login() {
 
     const input =
-        document.getElementById("password").value.trim();
+        document.getElementById("password")
+        .value
+        .trim();
 
     const button =
         document.getElementById("loginButton");
@@ -492,18 +466,43 @@ async function login() {
 
     button.disabled = true;
 
-    button.textContent = "جاري الاتصال...";
+    button.textContent =
+        "جاري الاتصال...";
 
 
     try {
 
-        const result = await sendRequest({
+        /*
+        نستخدم GET بدل POST
+        */
 
-            action: "getSheets",
+        const url =
+            API_URL +
+            "?action=getSheets" +
+            "&password=" +
+            encodeURIComponent(password);
 
-            password: password
 
-        });
+        const response =
+            await fetch(
+                url,
+                {
+                    method: "GET"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " + response.status
+            );
+
+        }
+
+
+        const result =
+            await response.json();
 
 
         if (
@@ -511,64 +510,74 @@ async function login() {
             result.status !== "success"
         ) {
 
+            password = "";
+
             showMessage(
                 "loginMessage",
                 result?.message ||
-                "تعذر الاتصال بـ Google Sheets",
+                "كلمة المرور غير صحيحة",
                 "error"
             );
-
-            password = "";
 
             return;
         }
 
 
         /*
-        إخفاء تسجيل الدخول
+        إخفاء الدخول
         */
 
-        document.getElementById("loginPage")
-            .style.display = "none";
+        document.getElementById(
+            "loginPage"
+        ).style.display = "none";
 
 
         /*
         إظهار لوحة التحكم
         */
 
-        document.getElementById("dashboard")
-            .style.display = "block";
+        document.getElementById(
+            "dashboard"
+        ).style.display = "block";
 
 
         /*
-        إضافة أسماء الأوراق
+        تحميل المجموعات
         */
 
         const select =
-            document.getElementById("sheetSelect");
+            document.getElementById(
+                "sheetSelect"
+            );
 
 
         select.innerHTML =
             '<option value="">اختر المجموعة</option>';
 
 
-        result.sheets.forEach(function(sheetName) {
+        result.sheets.forEach(
+            function(sheetName) {
 
-            const option =
-                document.createElement("option");
-
-
-            option.value =
-                sheetName;
-
-
-            option.textContent =
-                sheetName;
+                const option =
+                    document.createElement(
+                        "option"
+                    );
 
 
-            select.appendChild(option);
+                option.value =
+                    sheetName;
 
-        });
+
+                option.textContent =
+                    sheetName;
+
+
+                select.appendChild(
+                    option
+                );
+
+            }
+        );
 
 
     }
@@ -576,14 +585,13 @@ async function login() {
 
         console.error(error);
 
+        password = "";
 
         showMessage(
             "loginMessage",
             "تعذر الاتصال بـ Google Sheets",
             "error"
         );
-
-        password = "";
 
     }
     finally {
@@ -597,35 +605,22 @@ async function login() {
 }
 
 
-/*
-================================================
-تحميل المنتجات
-================================================
-*/
+/* ==================================================
+   تحميل المنتجات
+================================================== */
 
 async function loadItems() {
 
     const sheetName =
-        document.getElementById("sheetSelect").value;
+        document.getElementById(
+            "sheetSelect"
+        ).value;
 
 
     const container =
-        document.getElementById("itemsContainer");
-
-
-    const count =
-        document.getElementById("count");
-
-
-    /*
-    مسح البحث عند تغيير المجموعة
-    */
-
-    document.getElementById("searchInput")
-        .value = "";
-
-
-    count.textContent = "";
+        document.getElementById(
+            "itemsContainer"
+        );
 
 
     if (!sheetName) {
@@ -634,6 +629,10 @@ async function loadItems() {
             '<div class="empty">' +
             'اختر المجموعة لعرض المنتجات' +
             '</div>';
+
+        document.getElementById(
+            "count"
+        ).textContent = "";
 
         return;
     }
@@ -647,16 +646,30 @@ async function loadItems() {
 
     try {
 
+        const url =
+            API_URL +
+            "?action=getItems" +
+            "&password=" +
+            encodeURIComponent(password) +
+            "&sheetName=" +
+            encodeURIComponent(sheetName);
+
+
+        const response =
+            await fetch(url);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " + response.status
+            );
+
+        }
+
+
         const result =
-            await sendRequest({
-
-                action: "getItems",
-
-                password: password,
-
-                sheetName: sheetName
-
-            });
+            await response.json();
 
 
         if (
@@ -666,8 +679,10 @@ async function loadItems() {
 
             container.innerHTML =
                 '<div class="empty">' +
-                (result?.message ||
-                "فشل تحميل المنتجات") +
+                (
+                    result?.message ||
+                    "فشل تحميل المنتجات"
+                ) +
                 '</div>';
 
             return;
@@ -675,9 +690,7 @@ async function loadItems() {
 
 
         allItems =
-            Array.isArray(result.items)
-                ? result.items
-                : [];
+            result.items || [];
 
 
         displayItems(allItems);
@@ -691,7 +704,7 @@ async function loadItems() {
 
         container.innerHTML =
             '<div class="empty">' +
-            'حدث خطأ أثناء تحميل المنتجات' +
+            'تعذر تحميل المنتجات' +
             '</div>';
 
     }
@@ -699,33 +712,36 @@ async function loadItems() {
 }
 
 
-/*
-================================================
-عرض المنتجات
-================================================
-*/
+/* ==================================================
+   عرض المنتجات
+================================================== */
 
 function displayItems(items) {
 
     const container =
-        document.getElementById("itemsContainer");
+        document.getElementById(
+            "itemsContainer"
+        );
 
 
     const count =
-        document.getElementById("count");
+        document.getElementById(
+            "count"
+        );
 
 
-    if (!items || items.length === 0) {
+    if (
+        !items ||
+        items.length === 0
+    ) {
 
         container.innerHTML =
             '<div class="empty">' +
             'لا توجد منتجات' +
             '</div>';
 
-
         count.textContent =
             "عدد المنتجات: 0";
-
 
         return;
     }
@@ -739,73 +755,67 @@ function displayItems(items) {
     container.innerHTML = "";
 
 
-    items.forEach(function(item, index) {
+    items.forEach(
+        function(item, index) {
 
 
-        const row =
-            document.createElement("div");
+            const row =
+                document.createElement(
+                    "div"
+                );
 
 
-        row.className =
-            "product-row";
+            row.className =
+                "product-row";
 
 
-        row.dataset.index =
-            index;
+            const name =
+                document.createElement(
+                    "div"
+                );
 
 
-        /*
-        اسم المنتج
-        */
-
-        const name =
-            document.createElement("div");
+            name.className =
+                "product-name";
 
 
-        name.className =
-            "product-name";
+            name.textContent =
+                item.name;
 
 
-        name.textContent =
-            item.name;
+            const price =
+                document.createElement(
+                    "div"
+                );
 
 
-        /*
-        السعر
-        */
+            price.innerHTML = `
 
-        const price =
-            document.createElement("div");
+                <button
+                    class="price-button"
+                    onclick="editPrice(${index})"
+                >
+                    ${formatPrice(item.price)}
+                </button>
 
-
-        price.innerHTML = `
-
-            <button
-                class="price-button"
-                onclick="editPrice(${index})"
-            >
-                ${formatPrice(item.price)}
-            </button>
-
-        `;
+            `;
 
 
-        row.appendChild(name);
+            row.appendChild(name);
 
-        row.appendChild(price);
+            row.appendChild(price);
 
-        container.appendChild(row);
+            container.appendChild(row);
 
-    });
+        }
+    );
 
 }
 
 
-/*
-================================================
-فتح تعديل السعر
-================================================
-*/
+/* ==================================================
+   تعديل السعر
+================================================== */
 
 function editPrice(index) {
 
@@ -814,12 +824,10 @@ function editPrice(index) {
 
 
     const rows =
-        document.querySelectorAll(".product-row");
+        document.querySelectorAll(
+            ".product-row"
+        );
 
-
-    /*
-    نبحث عن الصف الخاص بالمنتج
-    */
 
     const row =
         rows[index];
@@ -836,25 +844,25 @@ function editPrice(index) {
 
     priceCell.innerHTML = `
 
-        <div class="price-edit">
+        <div class="edit-box">
 
             <input
+                id="price-${index}"
                 type="number"
-                id="price-input-${index}"
-                value="${item.price ?? ""}"
-                step="0.01"
                 min="0"
+                step="0.01"
+                value="${item.price ?? ""}"
             >
 
             <button
-                class="save-small"
+                class="save-button"
                 onclick="savePrice(${index})"
             >
                 حفظ
             </button>
 
             <button
-                class="cancel-small"
+                class="cancel-button"
                 onclick="displayItems(allItems)"
             >
                 إلغاء
@@ -867,7 +875,7 @@ function editPrice(index) {
 
     const input =
         document.getElementById(
-            "price-input-" + index
+            "price-" + index
         );
 
 
@@ -875,10 +883,6 @@ function editPrice(index) {
 
     input.select();
 
-
-    /*
-    الضغط على Enter يحفظ السعر
-    */
 
     input.addEventListener(
         "keydown",
@@ -902,11 +906,9 @@ function editPrice(index) {
 }
 
 
-/*
-================================================
-حفظ السعر
-================================================
-*/
+/* ==================================================
+   حفظ السعر
+================================================== */
 
 async function savePrice(index) {
 
@@ -916,22 +918,13 @@ async function savePrice(index) {
 
     const input =
         document.getElementById(
-            "price-input-" + index
+            "price-" + index
         );
-
-
-    if (!input) {
-        return;
-    }
 
 
     const newPrice =
         input.value.trim();
 
-
-    /*
-    التحقق من السعر
-    */
 
     if (
         newPrice === "" ||
@@ -957,7 +950,6 @@ async function savePrice(index) {
 
     try {
 
-
         showMessage(
             "message",
             "جاري حفظ السعر...",
@@ -965,31 +957,52 @@ async function savePrice(index) {
         );
 
 
+        /*
+        نرسل POST لتعديل السعر
+        */
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            action:
+                                "updatePrice",
+
+                            password:
+                                password,
+
+                            sheetName:
+                                sheetName,
+
+                            itemName:
+                                item.name,
+
+                            newPrice:
+                                Number(newPrice)
+
+                        })
+                }
+            );
+
+
         const result =
-            await sendRequest({
-
-                action: "updatePrice",
-
-                password: password,
-
-                sheetName: sheetName,
-
-                itemName: item.name,
-
-                newPrice: Number(newPrice)
-
-            });
+            await response.json();
 
 
         if (
             result &&
             result.status === "success"
         ) {
-
-
-            /*
-            تحديث السعر في الصفحة
-            */
 
             item.price =
                 Number(newPrice);
@@ -1000,12 +1013,9 @@ async function savePrice(index) {
 
             showMessage(
                 "message",
-                "تم تحديث سعر " +
-                item.name +
-                " بنجاح ✅",
+                "تم تحديث السعر بنجاح ✅",
                 "success"
             );
-
 
         }
         else {
@@ -1019,7 +1029,6 @@ async function savePrice(index) {
 
         }
 
-
     }
     catch (error) {
 
@@ -1028,7 +1037,7 @@ async function savePrice(index) {
 
         showMessage(
             "message",
-            "حدث خطأ أثناء حفظ السعر",
+            "تعذر حفظ السعر",
             "error"
         );
 
@@ -1037,18 +1046,17 @@ async function savePrice(index) {
 }
 
 
-/*
-================================================
-البحث
-================================================
-*/
+/* ==================================================
+   البحث
+================================================== */
 
 function filterItems() {
 
     const search =
         document.getElementById(
             "searchInput"
-        ).value
+        )
+        .value
         .trim()
         .toLowerCase();
 
@@ -1062,13 +1070,15 @@ function filterItems() {
 
 
     const filtered =
-        allItems.filter(function(item) {
+        allItems.filter(
+            function(item) {
 
-            return String(item.name)
-                .toLowerCase()
-                .includes(search);
+                return String(item.name)
+                    .toLowerCase()
+                    .includes(search);
 
-        });
+            }
+        );
 
 
     displayItems(filtered);
@@ -1076,51 +1086,9 @@ function filterItems() {
 }
 
 
-/*
-================================================
-إرسال الطلب إلى Google Apps Script
-================================================
-*/
-
-async function sendRequest(data) {
-
-    const response =
-        await fetch(
-            API_URL,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type":
-                        "text/plain;charset=utf-8"
-                },
-
-                body:
-                    JSON.stringify(data)
-            }
-        );
-
-
-    if (!response.ok) {
-
-        throw new Error(
-            "HTTP Error: " +
-            response.status
-        );
-
-    }
-
-
-    return await response.json();
-
-}
-
-
-/*
-================================================
-تنسيق السعر
-================================================
-*/
+/* ==================================================
+   تنسيق السعر
+================================================== */
 
 function formatPrice(price) {
 
@@ -1131,7 +1099,6 @@ function formatPrice(price) {
     ) {
 
         return "0";
-
     }
 
 
@@ -1156,11 +1123,9 @@ function formatPrice(price) {
 }
 
 
-/*
-================================================
-عرض الرسائل
-================================================
-*/
+/* ==================================================
+   الرسائل
+================================================== */
 
 function showMessage(
     elementId,
@@ -1184,11 +1149,9 @@ function showMessage(
 }
 
 
-/*
-================================================
-تسجيل الخروج
-================================================
-*/
+/* ==================================================
+   تسجيل الخروج
+================================================== */
 
 function logout() {
 
@@ -1237,19 +1200,12 @@ function logout() {
         "count"
     ).textContent = "";
 
-
-    document.getElementById(
-        "message"
-    ).style.display = "none";
-
 }
 
 
-/*
-================================================
-زر Enter لتسجيل الدخول
-================================================
-*/
+/* ==================================================
+   Enter للدخول
+================================================== */
 
 document
     .getElementById("password")
