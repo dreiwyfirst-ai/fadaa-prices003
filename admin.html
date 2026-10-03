@@ -1,586 +1,1364 @@
 <!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>لوحة التحكم - تعديل الأسعار</title>
+<meta charset="UTF-8">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: Arial, Tahoma, sans-serif;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #f3f4f6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
+<title>إدارة الأسعار</title>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    background: #f3f4f6;
+
+    font-family:
+        Arial,
+        Tahoma,
+        sans-serif;
+
+    color: #222;
+
+}
+
+
+/* =========================
+   الحاوية
+========================= */
+
+.container {
+
+    width: 95%;
+
+    max-width: 1000px;
+
+    margin: 30px auto;
+
+}
+
+
+/* =========================
+   الكروت
+========================= */
+
+.card {
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,0.08);
+
+}
+
+
+/* =========================
+   العنوان
+========================= */
+
+.header {
+
+    text-align: center;
+
+    margin-bottom: 25px;
+
+}
+
+
+.header-icon {
+
+    font-size: 45px;
+
+    margin-bottom: 5px;
+
+}
+
+
+.header h1 {
+
+    margin: 0;
+
+    font-size: 27px;
+
+}
+
+
+.header p {
+
+    color: #777;
+
+    margin-top: 8px;
+
+}
+
+
+/* =========================
+   تسجيل الدخول
+========================= */
+
+#loginPage {
+
+    max-width: 500px;
+
+    margin: 100px auto;
+
+}
+
+
+input,
+select {
+
+    width: 100%;
+
+    padding: 13px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+
+    outline: none;
+
+}
+
+
+input:focus,
+select:focus {
+
+    border-color: #333;
+
+}
+
+
+label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-weight: bold;
+
+}
+
+
+.form-group {
+
+    margin-bottom: 18px;
+
+}
+
+
+button {
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 12px 18px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+}
+
+
+.login-button {
+
+    width: 100%;
+
+    background: #222;
+
+    color: white;
+
+}
+
+
+.login-button:hover {
+
+    background: #000;
+
+}
+
+
+/* =========================
+   لوحة التحكم
+========================= */
+
+#dashboard {
+
+    display: none;
+
+}
+
+
+.controls {
+
+    display: grid;
+
+    grid-template-columns: 1fr 2fr;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+
+}
+
+
+.search {
+
+    direction: rtl;
+
+}
+
+
+/* =========================
+   جدول المنتجات
+========================= */
+
+.table {
+
+    width: 100%;
+
+}
+
+
+.table-header {
+
+    display: grid;
+
+    grid-template-columns: 1fr 180px;
+
+    background: #222;
+
+    color: white;
+
+    padding: 14px;
+
+    border-radius: 10px 10px 0 0;
+
+    font-weight: bold;
+
+}
+
+
+.product-row {
+
+    display: grid;
+
+    grid-template-columns: 1fr 180px;
+
+    align-items: center;
+
+    border-bottom: 1px solid #eee;
+
+    padding: 10px 14px;
+
+    min-height: 58px;
+
+}
+
+
+.product-row:hover {
+
+    background: #fafafa;
+
+}
+
+
+.product-name {
+
+    font-size: 15px;
+
+    padding-left: 10px;
+
+}
+
+
+/* =========================
+   السعر
+========================= */
+
+.price-button {
+
+    width: 100%;
+
+    background: #f1f1f1;
+
+    color: #222;
+
+    border: 1px solid #ddd;
+
+    font-size: 16px;
+
+}
+
+
+.price-button:hover {
+
+    background: #e7e7e7;
+
+}
+
+
+/* =========================
+   وضع التعديل
+========================= */
+
+.price-edit {
+
+    display: flex;
+
+    gap: 6px;
+
+}
+
+
+.price-edit input {
+
+    width: 100%;
+
+    text-align: center;
+
+    direction: ltr;
+
+    padding: 9px;
+
+}
+
+
+.save-small {
+
+    background: #222;
+
+    color: white;
+
+    min-width: 65px;
+
+}
+
+
+.cancel-small {
+
+    background: #eee;
+
+    color: #333;
+
+    min-width: 50px;
+
+}
+
+
+/* =========================
+   الرسائل
+========================= */
+
+.message {
+
+    display: none;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    margin: 15px 0;
+
+    text-align: center;
+
+}
+
+
+.success {
+
+    display: block;
+
+    background: #e8f7ee;
+
+    color: #187a43;
+
+}
+
+
+.error {
+
+    display: block;
+
+    background: #fdecec;
+
+    color: #b42318;
+
+}
+
+
+/* =========================
+   التحميل
+========================= */
+
+.loading {
+
+    text-align: center;
+
+    padding: 30px;
+
+    color: #777;
+
+}
+
+
+/* =========================
+   لا توجد نتائج
+========================= */
+
+.empty {
+
+    text-align: center;
+
+    padding: 40px;
+
+    color: #777;
+
+}
+
+
+/* =========================
+   تسجيل الخروج
+========================= */
+
+.logout {
+
+    margin-top: 20px;
+
+    background: #eee;
+
+    color: #333;
+
+}
+
+
+/* =========================
+   الهاتف
+========================= */
+
+@media (max-width: 650px) {
 
     .container {
-      width: 100%;
-      max-width: 500px;
+
+        width: 96%;
+
+        margin: 15px auto;
+
     }
+
 
     .card {
-      background: #ffffff;
-      border-radius: 18px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+
+        padding: 15px;
+
     }
 
-    h1 {
-      text-align: center;
-      margin: 0 0 10px;
-      color: #222;
-      font-size: 26px;
+
+    .controls {
+
+        grid-template-columns: 1fr;
+
     }
 
-    .subtitle {
-      text-align: center;
-      color: #777;
-      margin-bottom: 25px;
-      font-size: 14px;
+
+    .table-header {
+
+        grid-template-columns: 1fr 130px;
+
     }
 
-    .form-group {
-      margin-bottom: 18px;
+
+    .product-row {
+
+        grid-template-columns: 1fr 130px;
+
     }
 
-    label {
-      display: block;
-      margin-bottom: 7px;
-      font-weight: bold;
-      color: #333;
+
+    .product-name {
+
+        font-size: 13px;
+
     }
 
-    input {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      font-size: 16px;
-      outline: none;
-      transition: 0.2s;
-    }
+}
 
-    input:focus {
-      border-color: #222;
-      box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
-    }
+</style>
 
-    button {
-      width: 100%;
-      border: none;
-      border-radius: 10px;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .login-btn,
-    .save-btn {
-      background: #222;
-      color: white;
-    }
-
-    .login-btn:hover,
-    .save-btn:hover {
-      background: #000;
-    }
-
-    .logout-btn {
-      background: #eee;
-      color: #333;
-      margin-top: 10px;
-    }
-
-    .logout-btn:hover {
-      background: #ddd;
-    }
-
-    .message {
-      display: none;
-      padding: 12px;
-      border-radius: 10px;
-      margin-top: 15px;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .success {
-      display: block;
-      background: #e8f7ee;
-      color: #187a43;
-    }
-
-    .error {
-      display: block;
-      background: #fdecec;
-      color: #b42318;
-    }
-
-    #adminPanel {
-      display: none;
-    }
-
-    .loading {
-      opacity: 0.6;
-      pointer-events: none;
-    }
-
-    .price-input {
-      direction: ltr;
-      text-align: right;
-    }
-
-    .header-icon {
-      text-align: center;
-      font-size: 45px;
-      margin-bottom: 10px;
-    }
-
-    .note {
-      background: #f8f8f8;
-      border-radius: 10px;
-      padding: 10px;
-      margin-top: 18px;
-      font-size: 12px;
-      color: #777;
-      line-height: 1.6;
-    }
-  </style>
 </head>
+
 
 <body>
 
-<div class="container">
 
-  <!-- شاشة تسجيل الدخول -->
-  <div class="card" id="loginPanel">
+<!-- =========================
+     تسجيل الدخول
+========================= -->
 
-    <div class="header-icon">🔐</div>
+<div id="loginPage" class="card">
 
-    <h1>لوحة التحكم</h1>
+    <div class="header">
 
-    <div class="subtitle">
-      تسجيل الدخول لتعديل أسعار المنتجات
-    </div>
+        <div class="header-icon">
+            🔐
+        </div>
 
-    <div class="form-group">
-      <label for="password">كلمة المرور</label>
+        <h1>
+            لوحة إدارة الأسعار
+        </h1>
 
-      <input
-        type="password"
-        id="password"
-        placeholder="أدخل كلمة المرور"
-        autocomplete="current-password"
-      >
-    </div>
-
-    <button class="login-btn" onclick="login()">
-      دخول
-    </button>
-
-    <div id="loginMessage" class="message"></div>
-
-  </div>
-
-
-  <!-- لوحة تعديل الأسعار -->
-  <div class="card" id="adminPanel">
-
-    <div class="header-icon">💰</div>
-
-    <h1>تعديل سعر المنتج</h1>
-
-    <div class="subtitle">
-      أدخل بيانات المنتج والسعر الجديد
-    </div>
-
-
-    <div class="form-group">
-
-      <label for="groupName">
-        اسم المجموعة / الورقة
-      </label>
-
-      <input
-        type="text"
-        id="groupName"
-        placeholder="مثال: ثلاجات"
-      >
+        <p>
+            تسجيل الدخول
+        </p>
 
     </div>
 
 
     <div class="form-group">
 
-      <label for="productName">
-        اسم الصنف
-      </label>
+        <label>
+            كلمة المرور
+        </label>
 
-      <input
-        type="text"
-        id="productName"
-        placeholder="اكتب اسم المنتج بالضبط"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label for="newPrice">
-        السعر الجديد
-      </label>
-
-      <input
-        type="number"
-        id="newPrice"
-        class="price-input"
-        placeholder="0.00"
-        step="0.01"
-        min="0"
-      >
+        <input
+            type="password"
+            id="password"
+            placeholder="أدخل كلمة المرور"
+        >
 
     </div>
 
 
     <button
-      class="save-btn"
-      id="saveButton"
-      onclick="updatePrice()"
+        class="login-button"
+        onclick="login()"
     >
-      حفظ وإرسال
+
+        دخول
+
     </button>
 
 
-    <div id="updateMessage" class="message"></div>
-
-
-    <div class="note">
-      ⚠️ تأكد من كتابة اسم المجموعة واسم الصنف بنفس الشكل
-      الموجود في Google Sheets قبل تنفيذ التعديل.
-    </div>
-
-
-    <button
-      class="logout-btn"
-      onclick="logout()"
-    >
-      تسجيل الخروج
-    </button>
-
-  </div>
+    <div
+        id="loginMessage"
+        class="message"
+    ></div>
 
 </div>
 
 
+
+<!-- =========================
+     لوحة التحكم
+========================= -->
+
+<div
+    id="dashboard"
+    class="container"
+>
+
+    <div class="card">
+
+
+        <div class="header">
+
+            <div class="header-icon">
+                💰
+            </div>
+
+            <h1>
+                إدارة أسعار المنتجات
+            </h1>
+
+            <p>
+                اضغط على السعر لتعديله
+            </p>
+
+        </div>
+
+
+
+        <!-- أدوات التحكم -->
+
+        <div class="controls">
+
+
+            <div>
+
+                <label>
+                    المجموعة
+                </label>
+
+                <select
+                    id="sheetSelect"
+                    onchange="loadItems()"
+                >
+
+                    <option value="">
+                        اختر المجموعة
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <div>
+
+                <label>
+                    البحث عن صنف
+                </label>
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search"
+                    placeholder="اكتب اسم الصنف..."
+                    oninput="filterItems()"
+                >
+
+            </div>
+
+
+        </div>
+
+
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+
+        <!-- جدول المنتجات -->
+
+        <div class="table">
+
+
+            <div class="table-header">
+
+                <div>
+                    اسم الصنف
+                </div>
+
+                <div>
+                    السعر
+                </div>
+
+            </div>
+
+
+            <div id="itemsContainer">
+
+                <div class="empty">
+
+                    اختر المجموعة لعرض المنتجات
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <button
+            class="logout"
+            onclick="logout()"
+        >
+
+            تسجيل الخروج
+
+        </button>
+
+
+    </div>
+
+</div>
+
+
+
 <script>
 
-  /*
-   * ==========================================
-   * إعدادات النظام
-   * ==========================================
-   */
 
-  const API_URL =
-    "https://script.google.com/macros/s/AKfycbxBIn3qdWSqv5I0amJ-WHYJR8aeFMsEbpPJe42ox4xhevtCeHp46XC0inujKw8ayJb/exec";
+/* ========================================
+   رابط Apps Script
+======================================== */
 
-
-  /*
-   * كلمة المرور
-   *
-   * غيّرها إلى كلمة المرور التي تريدها.
-   *
-   * ملاحظة:
-   * هذه الطريقة ليست حماية حقيقية لأن كلمة المرور
-   * موجودة داخل كود الصفحة.
-   */
-
-  const ADMIN_PASSWORD = "123456";
+const API_URL =
+"https://script.google.com/macros/s/AKfycbxBIn3qdWSqv5I0amJ-WHYJR8aeFMsEbpPJe42ox4xhevtCeHp46XC0inujKw8ayJb/exec";
 
 
-  /*
-   * ==========================================
-   * تسجيل الدخول
-   * ==========================================
-   */
+/* ========================================
+   المتغيرات
+======================================== */
 
-  function login() {
+let password = "";
 
-    const password =
-      document.getElementById("password").value.trim();
-
-    const message =
-      document.getElementById("loginMessage");
+let allItems = [];
 
 
-    if (!password) {
 
-      showMessage(
-        message,
-        "يرجى إدخال كلمة المرور.",
-        "error"
-      );
+/* ========================================
+   تسجيل الدخول
+======================================== */
 
-      return;
-    }
+async function login() {
 
+    const input =
+        document.getElementById("password").value.trim();
 
-    if (password === ADMIN_PASSWORD) {
+    if (!input) {
 
-      document.getElementById("loginPanel").style.display = "none";
+        showMessage(
+            "loginMessage",
+            "اكتب كلمة المرور أولاً",
+            "error"
+        );
 
-      document.getElementById("adminPanel").style.display = "block";
-
-      document.getElementById("password").value = "";
-
-    } else {
-
-      showMessage(
-        message,
-        "كلمة المرور غير صحيحة.",
-        "error"
-      );
+        return;
 
     }
 
-  }
 
-
-  /*
-   * ==========================================
-   * تحديث السعر
-   * ==========================================
-   */
-
-  async function updatePrice() {
-
-    const groupName =
-      document.getElementById("groupName").value.trim();
-
-    const productName =
-      document.getElementById("productName").value.trim();
-
-    const newPrice =
-      document.getElementById("newPrice").value.trim();
-
-    const message =
-      document.getElementById("updateMessage");
-
-    const button =
-      document.getElementById("saveButton");
-
-
-    /*
-     * التحقق من البيانات
-     */
-
-    if (!groupName) {
-
-      showMessage(
-        message,
-        "يرجى إدخال اسم المجموعة / الورقة.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    if (!productName) {
-
-      showMessage(
-        message,
-        "يرجى إدخال اسم الصنف.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    if (!newPrice || Number(newPrice) < 0) {
-
-      showMessage(
-        message,
-        "يرجى إدخال سعر صحيح.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    /*
-     * تعطيل الزر أثناء الإرسال
-     */
-
-    button.disabled = true;
-    button.textContent = "جاري الحفظ...";
-
-
-    /*
-     * البيانات التي سيتم إرسالها
-     */
-
-    const data = {
-
-      groupName: groupName,
-
-      productName: productName,
-
-      newPrice: Number(newPrice)
-
-    };
+    password = input;
 
 
     try {
 
-      /*
-       * إرسال البيانات إلى Google Apps Script
-       */
+        const result = await sendRequest({
 
-      const response = await fetch(API_URL, {
+            action: "getSheets",
 
-        method: "POST",
+            password: password
 
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
-
-        body: JSON.stringify(data)
-
-      });
+        });
 
 
-      const result = await response.json();
+        if (result.status !== "success") {
 
+            showMessage(
+                "loginMessage",
+                result.message || "فشل تسجيل الدخول",
+                "error"
+            );
 
-      /*
-       * التحقق من نتيجة العملية
-       */
+            password = "";
 
-      if (result.success) {
+            return;
 
-        showMessage(
-          message,
-          result.message || "تم تحديث السعر بنجاح ✅",
-          "success"
-        );
+        }
 
 
         /*
-         * تنظيف الحقول بعد النجاح
+         * إخفاء صفحة الدخول
          */
 
-        document.getElementById("productName").value = "";
+        document.getElementById("loginPage")
+            .style.display = "none";
 
-        document.getElementById("newPrice").value = "";
 
-      } else {
+        /*
+         * إظهار لوحة التحكم
+         */
 
-        showMessage(
-          message,
-          result.message || "فشل تحديث السعر.",
-          "error"
-        );
+        document.getElementById("dashboard")
+            .style.display = "block";
 
-      }
+
+        /*
+         * إضافة الأوراق للقائمة
+         */
+
+        const select =
+            document.getElementById("sheetSelect");
+
+
+        select.innerHTML =
+            '<option value="">اختر المجموعة</option>';
+
+
+        result.sheets.forEach(function(sheetName) {
+
+            const option =
+                document.createElement("option");
+
+            option.value = sheetName;
+
+            option.textContent = sheetName;
+
+            select.appendChild(option);
+
+        });
+
 
     } catch (error) {
 
-      console.error(error);
+        showMessage(
+            "loginMessage",
+            "تعذر الاتصال بـ Google Sheets",
+            "error"
+        );
 
-      showMessage(
-        message,
-        "حدث خطأ أثناء الاتصال بالخادم. تأكد من رابط Apps Script وإعداداته.",
-        "error"
-      );
+    }
+
+}
+
+
+
+/* ========================================
+   جلب الأصناف
+======================================== */
+
+async function loadItems() {
+
+    const sheetName =
+        document.getElementById("sheetSelect").value;
+
+
+    const container =
+        document.getElementById("itemsContainer");
+
+
+    if (!sheetName) {
+
+        container.innerHTML =
+            '<div class="empty">اختر المجموعة لعرض المنتجات</div>';
+
+        return;
 
     }
 
 
+    container.innerHTML =
+        '<div class="loading">جاري تحميل المنتجات...</div>';
+
+
+    try {
+
+        const result = await sendRequest({
+
+            action: "getItems",
+
+            password: password,
+
+            sheetName: sheetName
+
+        });
+
+
+        if (result.status !== "success") {
+
+            container.innerHTML =
+                '<div class="empty">' +
+                result.message +
+                '</div>';
+
+            return;
+
+        }
+
+
+        allItems = result.items;
+
+
+        displayItems(allItems);
+
+
+    } catch (error) {
+
+        container.innerHTML =
+            '<div class="empty">حدث خطأ أثناء تحميل المنتجات</div>';
+
+    }
+
+}
+
+
+
+/* ========================================
+   عرض المنتجات
+======================================== */
+
+function displayItems(items) {
+
+    const container =
+        document.getElementById("itemsContainer");
+
+
+    if (!items || items.length === 0) {
+
+        container.innerHTML =
+            '<div class="empty">لا توجد منتجات</div>';
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    items.forEach(function(item, index) {
+
+
+        const row =
+            document.createElement("div");
+
+
+        row.className =
+            "product-row";
+
+
+        row.id =
+            "product-" + index;
+
+
+        /*
+         * اسم المنتج
+         */
+
+        const name =
+            document.createElement("div");
+
+
+        name.className =
+            "product-name";
+
+
+        name.textContent =
+            item.name;
+
+
+        /*
+         * خانة السعر
+         */
+
+        const price =
+            document.createElement("div");
+
+
+        price.innerHTML = `
+
+            <button
+                class="price-button"
+                onclick="editPrice(${index})"
+            >
+
+                ${formatPrice(item.price)}
+
+            </button>
+
+        `;
+
+
+        row.appendChild(name);
+
+        row.appendChild(price);
+
+        container.appendChild(row);
+
+    });
+
+}
+
+
+
+/* ========================================
+   تعديل السعر
+======================================== */
+
+function editPrice(index) {
+
+    const item =
+        allItems[index];
+
+
+    const row =
+        document.getElementById(
+            "product-" + index
+        );
+
+
+    const priceCell =
+        row.children[1];
+
+
+    priceCell.innerHTML = `
+
+        <div class="price-edit">
+
+            <input
+                type="number"
+                id="price-input-${index}"
+                value="${item.price}"
+                step="0.01"
+                min="0"
+            >
+
+            <button
+                class="save-small"
+                onclick="savePrice(${index})"
+            >
+                حفظ
+            </button>
+
+            <button
+                class="cancel-small"
+                onclick="displayItems(allItems)"
+            >
+                ×
+            </button>
+
+        </div>
+
+    `;
+
+
     /*
-     * إعادة الزر إلى وضعه الطبيعي
+     * وضع المؤشر داخل خانة السعر
      */
 
-    button.disabled = false;
-
-    button.textContent = "حفظ وإرسال";
-
-  }
-
-
-  /*
-   * ==========================================
-   * تسجيل الخروج
-   * ==========================================
-   */
-
-  function logout() {
-
-    document.getElementById("adminPanel").style.display = "none";
-
-    document.getElementById("loginPanel").style.display = "block";
-
-    document.getElementById("password").value = "";
-
-    document.getElementById("groupName").value = "";
-
-    document.getElementById("productName").value = "";
-
-    document.getElementById("newPrice").value = "";
-
-    document.getElementById("updateMessage").style.display = "none";
-
-  }
+    const input =
+        document.getElementById(
+            "price-input-" + index
+        );
 
 
-  /*
-   * ==========================================
-   * عرض الرسائل
-   * ==========================================
-   */
+    input.focus();
 
-  function showMessage(element, text, type) {
+    input.select();
+
+}
+
+
+
+/* ========================================
+   حفظ السعر
+======================================== */
+
+async function savePrice(index) {
+
+    const item =
+        allItems[index];
+
+
+    const input =
+        document.getElementById(
+            "price-input-" + index
+        );
+
+
+    const newPrice =
+        input.value;
+
+
+    if (
+        newPrice === "" ||
+        isNaN(Number(newPrice)) ||
+        Number(newPrice) < 0
+    ) {
+
+        showMessage(
+            "message",
+            "أدخل سعرًا صحيحًا",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const sheetName =
+        document.getElementById("sheetSelect").value;
+
+
+    try {
+
+        const result =
+            await sendRequest({
+
+                action: "updatePrice",
+
+                password: password,
+
+                sheetName: sheetName,
+
+                itemName: item.name,
+
+                newPrice: Number(newPrice)
+
+            });
+
+
+        if (result.status === "success") {
+
+
+            /*
+             * تحديث السعر محليًا
+             */
+
+            item.price =
+                Number(newPrice);
+
+
+            /*
+             * إعادة عرض الصفوف
+             */
+
+            displayItems(allItems);
+
+
+            showMessage(
+                "message",
+                "تم تحديث سعر " +
+                item.name +
+                " إلى " +
+                formatPrice(newPrice) +
+                " بنجاح ✅",
+                "success"
+            );
+
+
+        } else {
+
+            showMessage(
+                "message",
+                result.message ||
+                "فشل تحديث السعر",
+                "error"
+            );
+
+        }
+
+
+    } catch (error) {
+
+        showMessage(
+            "message",
+            "حدث خطأ أثناء الاتصال بالخادم",
+            "error"
+        );
+
+    }
+
+}
+
+
+
+/* ========================================
+   البحث
+======================================== */
+
+function filterItems() {
+
+    const search =
+        document
+            .getElementById("searchInput")
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    if (!search) {
+
+        displayItems(allItems);
+
+        return;
+
+    }
+
+
+    const filtered =
+        allItems.filter(function(item) {
+
+            return String(item.name)
+                .toLowerCase()
+                .includes(search);
+
+        });
+
+
+    displayItems(filtered);
+
+}
+
+
+
+/* ========================================
+   إرسال الطلب إلى Apps Script
+======================================== */
+
+async function sendRequest(data) {
+
+    const response =
+        await fetch(API_URL, {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type":
+                    "text/plain;charset=utf-8"
+
+            },
+
+            body: JSON.stringify(data)
+
+        });
+
+
+    return await response.json();
+
+}
+
+
+
+/* ========================================
+   تنسيق السعر
+======================================== */
+
+function formatPrice(price) {
+
+    if (
+        price === null ||
+        price === undefined ||
+        price === ""
+    ) {
+
+        return "0";
+
+    }
+
+
+    const number =
+        Number(price);
+
+
+    if (isNaN(number)) {
+
+        return price;
+
+    }
+
+
+    return number.toLocaleString("en-US", {
+
+        maximumFractionDigits: 2
+
+    });
+
+}
+
+
+
+/* ========================================
+   الرسائل
+======================================== */
+
+function showMessage(
+    elementId,
+    text,
+    type
+) {
+
+    const element =
+        document.getElementById(elementId);
+
 
     element.textContent = text;
 
-    element.className = "message " + type;
 
-  }
+    element.className =
+        "message " + type;
+
+}
 
 
-  /*
-   * ==========================================
-   * الضغط على Enter في شاشة الدخول
-   * ==========================================
-   */
 
-  document
+/* ========================================
+   تسجيل الخروج
+======================================== */
+
+function logout() {
+
+    password = "";
+
+    allItems = [];
+
+
+    document.getElementById("dashboard")
+        .style.display = "none";
+
+
+    document.getElementById("loginPage")
+        .style.display = "block";
+
+
+    document.getElementById("password")
+        .value = "";
+
+
+    document.getElementById("sheetSelect")
+        .innerHTML =
+        '<option value="">اختر المجموعة</option>';
+
+
+    document.getElementById("itemsContainer")
+        .innerHTML =
+        '<div class="empty">اختر المجموعة لعرض المنتجات</div>';
+
+}
+
+
+
+/* ========================================
+   Enter لتسجيل الدخول
+======================================== */
+
+document
     .getElementById("password")
-    .addEventListener("keydown", function(event) {
+    .addEventListener(
+        "keydown",
+        function(event) {
 
-      if (event.key === "Enter") {
+            if (event.key === "Enter") {
 
-        login();
+                login();
 
-      }
+            }
 
-    });
+        }
+    );
 
 
 </script>
 
+
 </body>
+
 </html>
