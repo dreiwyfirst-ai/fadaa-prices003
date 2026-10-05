@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>المدينون</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Tahoma, Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+}
+
+.container {
+    width: 94%;
+    max-width: 1100px;
+    margin: 25px auto;
+}
+
+/* تسجيل الدخول */
+
+.login-box {
+    max-width: 400px;
+    margin: 80px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    text-align: center;
+}
+
+.login-box h2 {
+    margin-bottom: 25px;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #555;
+}
+
+button {
+    border: 0;
+    border-radius: 10px;
+    padding: 13px 20px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.login-btn {
+    width: 100%;
+    margin-top: 15px;
+    background: #222;
+    color: white;
+}
+
+/* الصفحة الرئيسية */
+
+#dashboard {
+    display: none;
+}
+
+.header {
+    background: #222;
+    color: white;
+    padding: 25px;
+    border-radius: 18px;
+    margin-bottom: 18px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 26px;
+}
+
+.header p {
+    margin: 0;
+    opacity: .8;
+}
+
+/* الإحصائيات */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.stat {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.05);
+}
+
+.stat-title {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+/* البحث */
+
+.search-box {
+    background: white;
+    padding: 15px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+}
+
+/* العملاء */
+
+.debtor-list {
+    display: grid;
+    gap: 12px;
+}
+
+.debtor {
+    background: white;
+    border-radius: 16px;
+    padding: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,.05);
+    transition: .2s;
+}
+
+.debtor:hover {
+    transform: translateY(-2px);
+}
+
+.debtor-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+}
+
+.name {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.amount {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.debtor-bottom {
+    margin-top: 10px;
+    color: #777;
+    font-size: 13px;
+}
+
+/* التفاصيل */
+
+.details {
+    display: none;
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.07);
+}
+
+.details h2 {
+    margin-top: 0;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.detail {
+    background: #f5f6f7;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.detail span {
+    display: block;
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.detail strong {
+    font-size: 18px;
+}
+
+.close-btn {
+    margin-top: 15px;
+    background: #222;
+    color: white;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+}
+
+.error {
+    background: #ffe8e8;
+    color: #b00020;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 15px;
+    display: none;
+}
+
+.empty {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    color: #777;
+}
+
+/* الهاتف */
+
+@media (max-width: 600px) {
+
+    .container {
+        width: 92%;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .debtor-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .amount {
+        font-size: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- تسجيل الدخول -->
+
+    <div id="loginBox" class="login-box">
+
+        <h2>🔐 لوحة المدينين</h2>
+
+        <p>أدخل كلمة مرور المدير</p>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="كلمة المرور"
+        >
+
+        <button
+            class="login-btn"
+            onclick="login()"
+        >
+            دخول
+        </button>
+
+        <div id="loginError" class="error"></div>
+
+    </div>
+
+
+    <!-- لوحة التحكم -->
+
+    <div id="dashboard">
+
+        <div class="header">
+
+            <h1>💰 لوحة المدينين</h1>
+
+            <p id="updatedAt">
+                جاري تحميل البيانات...
+            </p>
+
+        </div>
+
+
+        <!-- الإحصائيات -->
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <div class="stat-title">
+                    إجمالي المديونية
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="totalDebt"
+                >
+                    0 د.ل
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-title">
+                    عدد المدينين
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="totalDebtors"
+                >
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- البحث -->
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="search"
+                placeholder="🔎 ابحث عن اسم العميل..."
+                oninput="searchDebtors()"
+            >
+
+        </div>
+
+
+        <!-- قائمة العملاء -->
+
+        <div id="loading" class="loading">
+            جاري تحميل المدينين...
+        </div>
+
+        <div
+            id="debtorList"
+            class="debtor-list"
+        ></div>
+
+
+        <div
+            id="empty"
+            class="empty"
+            style="display:none;"
+        >
+            لا يوجد عميل بهذا الاسم
+        </div>
+
+
+        <!-- تفاصيل العميل -->
+
+        <div
+            id="details"
+            class="details"
+        >
+
+            <h2 id="detailName">
+                العميل
+            </h2>
+
+            <div class="detail-grid">
+
+                <div class="detail">
+
+                    <span>
+                        الرصيد
+                    </span>
+
+                    <strong id="detailBalance">
+                        0 د.ل
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        نسبة التحصيل
+                    </span>
+
+                    <strong id="detailRate">
+                        0%
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        تاريخ آخر دفعة
+                    </span>
+
+                    <strong id="detailLastPayment">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        إجمالي الدين
+                    </span>
+
+                    <strong id="detailTotal">
+                        0 د.ل
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        30 يوم
+                    </span>
+
+                    <strong id="detail30">
+                        0 د.ل
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        60 يوم
+                    </span>
+
+                    <strong id="detail60">
+                        0 د.ل
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        90 يوم
+                    </span>
+
+                    <strong id="detail90">
+                        0 د.ل
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        أكثر من 90 يوم
+                    </span>
+
+                    <strong id="detailOver90">
+                        0 د.ل
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="close-btn"
+                onclick="closeDetails()"
+            >
+                إغلاق التفاصيل
+            </button>
+
+        </div>
+
+
+        <div
+            id="mainError"
+            class="error"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   رابط Google Apps Script
+===================================================== */
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbw95OSDz_tQSyVgDgzUZYf1Ini1sioFJDcXxljK4kj3qTe4Xi2ERvfSM989cfRVZOAgRg/exec";
+
+
+let allDebtors = [];
+
+
+/* =====================================================
+   تسجيل الدخول
+===================================================== */
+
+function login() {
+
+    const password =
+        document.getElementById("password").value.trim();
+
+    const error =
+        document.getElementById("loginError");
+
+
+    if (!password) {
+
+        error.textContent =
+            "اكتب كلمة المرور";
+
+        error.style.display =
+            "block";
+
+        return;
+    }
+
+
+    error.style.display =
+        "none";
+
+
+    document.getElementById("loginBox")
+        .style.display = "none";
+
+    document.getElementById("dashboard")
+        .style.display = "block";
+
+
+    loadDebtors(password);
+}
+
+
+/* =====================================================
+   تحميل البيانات
+===================================================== */
+
+async function loadDebtors(password) {
+
+    const loading =
+        document.getElementById("loading");
+
+    const mainError =
+        document.getElementById("mainError");
+
+
+    loading.style.display =
+        "block";
+
+    mainError.style.display =
+        "none";
+
+
+    try {
+
+        const url =
+            API_URL +
+            "?action=getDebtors&password=" +
+            encodeURIComponent(password);
+
+
+        const response =
+            await fetch(url);
+
+
+        const data =
+            await response.json();
+
+
+        if (data.status !== "success") {
+
+            throw new Error(
+                data.message ||
+                "تعذر تحميل البيانات"
+            );
+
+        }
+
+
+        allDebtors =
+            data.debtors || [];
+
+
+        document.getElementById("totalDebt")
+            .textContent =
+            formatMoney(data.totalDebt);
+
+
+        document.getElementById("totalDebtors")
+            .textContent =
+            data.totalDebtors;
+
+
+        document.getElementById("updatedAt")
+            .textContent =
+            "آخر تحديث: " +
+            data.updatedAt;
+
+
+        loading.style.display =
+            "none";
+
+
+        renderDebtors(allDebtors);
+
+
+    } catch (error) {
+
+        loading.style.display =
+            "none";
+
+        mainError.textContent =
+            error.message ||
+            "تعذر الاتصال بجوجل شيت";
+
+
+        mainError.style.display =
+            "block";
+    }
+}
+
+
+/* =====================================================
+   عرض العملاء
+===================================================== */
+
+function renderDebtors(debtors) {
+
+    const list =
+        document.getElementById("debtorList");
+
+    const empty =
+        document.getElementById("empty");
+
+
+    list.innerHTML = "";
+
+
+    if (!debtors.length) {
+
+        empty.style.display =
+            "block";
+
+        return;
+
+    }
+
+
+    empty.style.display =
+        "none";
+
+
+    debtors.forEach(function(debtor) {
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "debtor";
+
+
+        card.onclick =
+            function() {
+
+                showDetails(debtor);
+
+            };
+
+
+        card.innerHTML = `
+
+            <div class="debtor-top">
+
+                <div class="name">
+                    ${escapeHtml(debtor.name)}
+                </div>
+
+                <div class="amount">
+                    ${formatMoney(debtor.balance)}
+                </div>
+
+            </div>
+
+            <div class="debtor-bottom">
+
+                نسبة التحصيل:
+                ${formatPercent(debtor.collectionRate)}
+
+                &nbsp; | &nbsp;
+
+                أكثر من 90 يوم:
+                ${formatMoney(debtor.over90)}
+
+            </div>
+
+        `;
+
+
+        list.appendChild(card);
+
+    });
+
+}
+
+
+/* =====================================================
+   البحث
+===================================================== */
+
+function searchDebtors() {
+
+    const text =
+        document.getElementById("search")
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    const filtered =
+        allDebtors.filter(function(debtor) {
+
+            return debtor.name
+                .toLowerCase()
+                .includes(text);
+
+        });
+
+
+    renderDebtors(filtered);
+
+}
+
+
+/* =====================================================
+   تفاصيل العميل
+===================================================== */
+
+function showDetails(debtor) {
+
+    document.getElementById("details")
+        .style.display = "block";
+
+
+    document.getElementById("detailName")
+        .textContent =
+        debtor.name;
+
+
+    document.getElementById("detailBalance")
+        .textContent =
+        formatMoney(debtor.balance);
+
+
+    document.getElementById("detailRate")
+        .textContent =
+        formatPercent(debtor.collectionRate);
+
+
+    document.getElementById("detailLastPayment")
+        .textContent =
+        debtor.lastPayment || "-";
+
+
+    document.getElementById("detailTotal")
+        .textContent =
+        formatMoney(debtor.agingTotal);
+
+
+    document.getElementById("detail30")
+        .textContent =
+        formatMoney(debtor.day30);
+
+
+    document.getElementById("detail60")
+        .textContent =
+        formatMoney(debtor.day60);
+
+
+    document.getElementById("detail90")
+        .textContent =
+        formatMoney(debtor.day90);
+
+
+    document.getElementById("detailOver90")
+        .textContent =
+        formatMoney(debtor.over90);
+
+
+    document.getElementById("details")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+/* =====================================================
+   إغلاق التفاصيل
+===================================================== */
+
+function closeDetails() {
+
+    document.getElementById("details")
+        .style.display = "none";
+
+}
+
+
+/* =====================================================
+   تنسيق الأموال
+===================================================== */
+
+function formatMoney(value) {
+
+    const number =
+        Number(value) || 0;
+
+
+    return number.toLocaleString(
+        "ar-LY",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    ) + " د.ل";
+
+}
+
+
+/* =====================================================
+   تنسيق النسبة
+===================================================== */
+
+function formatPercent(value) {
+
+    const number =
+        Number(value) || 0;
+
+
+    return number.toLocaleString(
+        "ar-LY",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    ) + "%";
+
+}
+
+
+/* =====================================================
+   حماية النص
+===================================================== */
+
+function escapeHtml(text) {
+
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =====================================================
+   Enter في كلمة المرور
+===================================================== */
+
+document.getElementById("password")
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Enter") {
+                login();
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
